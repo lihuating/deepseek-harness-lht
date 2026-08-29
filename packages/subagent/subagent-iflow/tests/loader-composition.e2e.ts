@@ -15,15 +15,15 @@ import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@deepseek-ai/dsh-l
  */
 
 const driver = fileURLToPath(new URL(
-  '../../../../examples/acp-agent/tests/fixtures/subagent/subagent-iflow/driver.ts',
+  '../../../../snapshots/acp/escalation-approved/subagent/subagent-iflow/driver.ts',
   import.meta.url,
 ))
 const configPath = fileURLToPath(new URL(
-  '../../../../examples/acp-agent/tests/fixtures/subagent/subagent-iflow/cordis.yml',
+  '../../../../snapshots/acp/escalation-approved/subagent/subagent-iflow/cordis.yml',
   import.meta.url,
 ))
 const fakeIflow = fileURLToPath(new URL(
-  '../../../../examples/acp-agent/tests/fixtures/subagent/subagent-iflow/fake-iflow.sh',
+  '../../../../snapshots/acp/escalation-approved/subagent/subagent-iflow/fake-iflow.sh',
   import.meta.url,
 ))
 const repoTsconfig = fileURLToPath(new URL('../../../../tsconfig.json', import.meta.url))
