@@ -2351,6 +2351,59 @@ export interface Config {
 
 Source: [`packages/subagent/subagent-fork-in-process/src/index.ts:31`](../packages/subagent/subagent-fork-in-process/src/index.ts)
 
+<a id="deepseek-aidsh-subagent-iflow"></a>
+
+## `@deepseek-ai/dsh-subagent-iflow`
+
+Requires: `subagents` · `subprocess`
+
+```ts config-catalog
+/** Config: how to spawn and bound the child iFlow process. */
+export interface Config {
+  /** Provider name on `ctx.subagents` (default `iflow`). */
+  providerName?: string
+  /**
+   * The executable to spawn for each run (default `iflow`; resolved through
+   * PATH). An absolute path pins a specific installation.
+   */
+  command?: string
+  /** Extra fixed arguments appended after the prompt (e.g. `-m`, `-y`). */
+  args?: string[]
+  /**
+   * Per-run model-call bound passed as `--max-turns` (default 20). It bounds
+   * iFlow's internal work; the wall-clock bound is `timeoutSeconds`.
+   */
+  maxTurns?: number
+  /**
+   * Provider-owned wall-clock bound in seconds (default 600; `0` disables it).
+   * When it elapses the child is terminated and the run settles as `error`
+   * with a timeout diagnostic. iFlow itself does not receive this bound.
+   */
+  timeoutSeconds?: number
+  /**
+   * Working directory override for the child process. Must be non-empty; a
+   * relative path resolves against the harness launch directory at load, and
+   * the result must be an existing directory. When omitted, each child
+   * inherits its delegating parent session's cwd — and starting one from a
+   * parent session that has no cwd fails.
+   */
+  cwd?: string
+  /**
+   * Extra environment variables for the child process. Forwarded on top of a
+   * credential-scrubbed copy of the parent env, so an explicit key here
+   * reaches the child while ambient secrets do not leak implicitly.
+   */
+  env?: Record<string, string>
+  /**
+   * Positive finite grace period (ms) for the subprocess seam's
+   * SIGTERM→SIGKILL escalation; must not exceed `MAX_TIMER_DELAY_MS`.
+   */
+  graceMs?: number
+}
+```
+
+Source: [`packages/subagent/subagent-iflow/src/index.ts:41`](../packages/subagent/subagent-iflow/src/index.ts)
+
 <a id="deepseek-aidsh-subagent-spawn-in-process"></a>
 
 ## `@deepseek-ai/dsh-subagent-spawn-in-process`

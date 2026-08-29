@@ -77,6 +77,7 @@
     "@deepseek-ai/dsh-subagent-codex": "workspace:*",
     "@deepseek-ai/dsh-subagent-dsh-sdk": "workspace:*",
     "@deepseek-ai/dsh-subagent-fork-in-process": "workspace:*",
+    "@deepseek-ai/dsh-subagent-iflow": "workspace:*",
     "@deepseek-ai/dsh-subagent-spawn-in-process": "workspace:*",
     "@deepseek-ai/dsh-subprocess-e2b": "workspace:*",
     "@deepseek-ai/dsh-subprocess-local": "workspace:*",

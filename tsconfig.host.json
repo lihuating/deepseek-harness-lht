@@ -271,6 +271,7 @@
     { "path": "./packages/subagent/subagent-spawn-in-process" },
     { "path": "./packages/subagent/subagent-fork-in-process" },
     { "path": "./packages/subagent/subagent-acp" },
+    { "path": "./packages/subagent/subagent-iflow" },
     { "path": "./packages/subagent/subagent-claude-code" },
     { "path": "./packages/subagent/subagent-codex" },
     { "path": "./packages/subagent/subagent-dsh-sdk" },
