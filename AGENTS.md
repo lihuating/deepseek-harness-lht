@@ -12,6 +12,7 @@ DeepSeek Harness is a plugin-based agent harness on vendored Cordis: **everythin
 vendor/      Vendored Cordis source — manifest + sync procedure in vendor/README.md
 packages/    @deepseek-ai/dsh-<pkg> workspaces at packages/<group>/<pkg>/; the group
              table with roles and release expectations lives in packages/README.md
+apps/        Product entry workspaces: the dsh CLI source launch (apps/cli) and the web frontend build (apps/web)
 python/      Python SDK and bundled runtime (see python/README.md)
 native/      @deepseek-ai/node-addon-landlock-run source of record (see native/README.md)
 examples/    Runnable cordis.yml leaves over packages/examples bundles (see examples/AGENTS.md)
@@ -47,6 +48,7 @@ pnpm run website:build  # VitePress build (doubles as dead-link check)
 pnpm dsh --profile headless "task"  # run one task from source (needs DEEPSEEK_API_KEY)
 pnpm run demo:cordis    # the agent modifies its own runtime (needs key)
 pnpm run demo:acp       # ACP automation server (needs DEEPSEEK_API_KEY)
+pnpm run mock:llm       # scriptable OpenAI-compatible mock LLM server; keyless loop/adapter testing
 ```
 
 ### Host sandbox failures
