@@ -15,7 +15,6 @@ packages/    @deepseek-ai/dsh-<pkg> workspaces at packages/<group>/<pkg>/; the g
 apps/        Product entry workspaces: the dsh CLI source launch (apps/cli) and the web frontend build (apps/web)
 python/      Python SDK and bundled runtime (see python/README.md)
 native/      @deepseek-ai/node-addon-landlock-run source of record (see native/README.md)
-examples/    Runnable cordis.yml leaves over packages/examples bundles (see examples/AGENTS.md)
 .agents/     Agent workflows and Agent Notes (`notes/`)
 docs/        architecture, generated catalogs, postmortems, cookbook (see docs/AGENTS.md)
 scripts/     repo gates and generators
@@ -46,8 +45,9 @@ pnpm run check:windows-wine  # ONLY when diagnosing a known Windows failure (nee
 pnpm run doc-sync       # all documentation gates; leaf list in scripts/run-gates.ts
 pnpm run website:build  # VitePress build (doubles as dead-link check)
 pnpm dsh --profile headless "task"  # run one task from source (needs DEEPSEEK_API_KEY)
-pnpm run demo:cordis    # the agent modifies its own runtime (needs key)
-pnpm run demo:acp       # ACP automation server (needs DEEPSEEK_API_KEY)
+pnpm run demo:ptc       # run one headless task through the PTC mode composition (needs key)
+pnpm run demo:inspector # launch dsh web with the experimental DevTools inspector patch
+pnpm run dev:web        # web frontend dev server with polling rebuild
 pnpm run mock:llm       # scriptable OpenAI-compatible mock LLM server; keyless loop/adapter testing
 ```
 
