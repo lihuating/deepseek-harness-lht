@@ -254,7 +254,7 @@ describe('plugin registration', () => {
     await ctx.plugin(iflow, {})
     const provider = ctx.subagents.getProvider('iflow')
     expect(provider?.name).toBe('iflow')
-    expect(provider?.capabilities).toEqual({ outputSchema: false, depthLimit: false, toolFilter: false, persona: false })
+    expect(provider?.capabilities).toEqual({ agentOptions: false, outputSchema: false, depthLimit: false, toolFilter: false, persona: false })
     expect(provider?.inheritsParentContext).toBe(false)
     expect(ctx.subagents.list()).toEqual(['iflow'])
   })

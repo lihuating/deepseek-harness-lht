@@ -158,7 +158,7 @@ function resolveCwd(configured: string | undefined, request: SubagentStartReques
  * rejects a request needing any of them before `start` runs).
  */
 class IflowProvider implements SubagentProvider {
-  readonly capabilities: SubagentCapabilities = { outputSchema: false, depthLimit: false, toolFilter: false, persona: false }
+  readonly capabilities: SubagentCapabilities = { agentOptions: false, outputSchema: false, depthLimit: false, toolFilter: false, persona: false }
   // Context contract: an out-of-process iFlow child starts fresh — no parent conversation crosses the process boundary.
   readonly inheritsParentContext = false
 
