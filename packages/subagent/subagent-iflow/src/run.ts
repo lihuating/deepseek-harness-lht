@@ -243,14 +243,13 @@ export async function startIflowRun(request: SubagentStartRequest, spec: IflowRu
       request.signal.removeEventListener('abort', onAbort)
       requestCancel()
       disposal = (async (): Promise<void> => {
-        // A spawn failure has no process to tear down; observe the rejection
-        // so disposal in a finally block cannot surface it as unhandled.
-        if (child.pid <= 0) {
-          await child.done.catch(() => {})
-          return
-        }
+        // terminate() is the seam's only termination verb and a no-op once the
+        // managed range is gone, so a spawn failure needs no separate path.
+        // Observing `done` keeps the rejection from surfacing as unhandled
+        // when disposal runs in a finally block.
         child.terminate()
-        await child.waitForExit()
+        await child.waitForExit().catch(() => {})
+        await child.done.catch(() => {})
       })()
       return disposal
     },
