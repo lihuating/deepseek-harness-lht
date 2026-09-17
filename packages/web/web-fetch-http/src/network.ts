@@ -158,6 +158,45 @@ function embeddedIpv4Address(bytes: readonly number[], prefixLength: Nat64Prefix
 }
 
 /**
+ * The process-global dispatcher slot Node's `--use-env-proxy` fills with an
+ * agent built from `HTTPS_PROXY` and friends.
+ *
+ * Undici 8 records its global dispatcher in `undici.globalDispatcher.2` and
+ * mirrors it into this legacy slot. Its module top level installs a plain
+ * `Agent` into both slots whenever the primary slot is unset — which is always
+ * the case under `--use-env-proxy`, because Node writes only this legacy slot.
+ * Importing Undici therefore replaces the proxy agent with a direct one and
+ * strips the proxy from the process-global `fetch` the harness uses for model
+ * requests, without leaving any application-visible trace.
+ */
+const LEGACY_GLOBAL_DISPATCHER_SLOT = Symbol.for('undici.globalDispatcher.1')
+
+/** Symbol-keyed reads and writes on `globalThis` need one widening point. */
+type SymbolKeyedGlobals = Record<symbol, unknown>
+
+/**
+ * Import Undici, then put back the global dispatcher the import displaced.
+ *
+ * A slot that was empty before the import is left as Undici installed it, so
+ * a process that configured no proxy keeps Undici's own default.
+ *
+ * @param load - module loader, overridden only by focused tests.
+ * @returns the Undici module namespace.
+ */
+export async function importUndici(
+  load: () => Promise<typeof import('undici')> = () => import('undici'),
+): Promise<typeof import('undici')> {
+  const displaced = (globalThis as unknown as SymbolKeyedGlobals)[LEGACY_GLOBAL_DISPATCHER_SLOT]
+  const undici = await load()
+  // Undici defines the slot writable and non-configurable, so assignment is the
+  // only way back to the displaced value.
+  if (displaced !== undefined) {
+    (globalThis as unknown as SymbolKeyedGlobals)[LEGACY_GLOBAL_DISPATCHER_SLOT] = displaced
+  }
+  return undici
+}
+
+/**
  * Fetch through an Undici agent whose lookup callback returns only the already
  * validated address set. The URL hostname remains intact for HTTP Host and TLS SNI.
  *
@@ -176,7 +215,7 @@ export async function requestPinned(
   // Keep the Node-only transport out of browser-worker startup. The preview
   // can load the provider and fail loud at its DNS stub without evaluating
   // Undici; a real request on Node resolves this maintained dependency here.
-  const { Agent, fetch } = await import('undici')
+  const { Agent, fetch } = await importUndici()
   const dispatcher = new Agent({
     autoSelectFamily: true,
     connect: { lookup: createPinnedLookup(addresses) },
