@@ -26,7 +26,7 @@ function request(text = 'task', signal = new AbortController().signal) {
   return { prompt: [{ type: 'text' as const, text }], parent: fakeParent, signal }
 }
 
-function text(blocks: ContentBlock[]): string {
+function text(blocks: readonly ContentBlock[]): string {
   return blocks.filter((block): block is Extract<ContentBlock, { type: 'text' }> => block.type === 'text')
     .map(block => block.text)
     .join('')

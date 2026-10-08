@@ -4,14 +4,15 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { type SessionEvent } from '@deepseek-ai/dsh-session'
+import type { ContentBlock } from '@deepseek-ai/dsh-llm'
 import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@deepseek-ai/dsh-loader-smoke'
 
 /**
- * Keyless REAL-composition coverage: a test-only cordis.yml boots the headless
- * app through the Loader with the iFlow backend pointed at a scripted fake
- * `iflow` CLI, the scripted model delegates once through the subagent tool, and
- * the fake child's stdout answer must reach the parent's tool result verbatim.
- * No model, no key.
+ * Keyless REAL-composition coverage: a test-only patch over the shipped
+ * headless profile boots the app through the Loader with the iFlow backend
+ * pointed at a scripted fake `iflow` CLI, the scripted model delegates once
+ * through the subagent tool, and the fake child's stdout answer must reach the
+ * parent's tool result verbatim. No model, no key.
  */
 
 const driver = fileURLToPath(new URL(
@@ -19,7 +20,7 @@ const driver = fileURLToPath(new URL(
   import.meta.url,
 ))
 const configPath = fileURLToPath(new URL(
-  '../../../../snapshots/acp/escalation-approved/subagent/subagent-iflow/cordis.yml',
+  '../../../../snapshots/acp/escalation-approved/subagent/subagent-iflow/iflow.patch.yml',
   import.meta.url,
 ))
 const fakeIflow = fileURLToPath(new URL(
@@ -38,7 +39,7 @@ async function jsonlFiles(dir: string): Promise<string[]> {
   return paths.flat()
 }
 
-describe('iFlow subagent delegation through a real cordis.yml', () => {
+describe('iFlow subagent delegation through the production profile', () => {
   it('delivers the prompt to the child CLI and returns its stdout as the tool result', async () => {
     chmodSync(fakeIflow, 0o755)
     let events: SessionEvent[] = []
@@ -62,8 +63,8 @@ describe('iFlow subagent delegation through a real cordis.yml', () => {
     // The tool result carries the fake child's stdout answer verbatim.
     const results = events.filter(event => event.type === 'tool/result')
     expect(results).toHaveLength(1)
-    const resultText = results[0]!.data.message.content[0].content
-      .filter(block => block.type === 'text')
+    const resultText = results[0]!.data.message.content
+      .filter((block): block is Extract<ContentBlock, { type: 'text' }> => block.type === 'text')
       .map(block => block.text)
       .join('')
     expect(resultText.trim()).toBe('fake iflow answer')
